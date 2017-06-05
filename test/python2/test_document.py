@@ -7,7 +7,7 @@ from __future__ import (absolute_import,
 from unittest import TestCase
 
 from prt.document       import (PRTDocument,
-                                           InvalidVersion)
+                                InvalidVersion)
 from prt.v2.pop_dialect import PRTPOPDialect
 from prt.v2.document    import PRTDocument as PRTDocumentV2
 

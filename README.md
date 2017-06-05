@@ -7,6 +7,7 @@ small and strict rich text serialisation protocol.
 
 - [PRTv2.0](#prtv20)
     - [Python 2](#python-2)
+        - [Dependencies](#dependencies)
     - [Python 3](#python-3)
 - [Lincese](#license)
 
