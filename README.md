@@ -8,6 +8,7 @@ small and strict rich text serialisation protocol.
 - [PRTv2.0](#prtv20)
     - [Python 2](#python-2)
         - [Dependencies](#dependencies)
+        - [Developer Dependencies](#developer-dependencies)
     - [Python 3](#python-3)
 - [Lincese](#license)
 
@@ -23,6 +24,10 @@ small and strict rich text serialisation protocol.
 
 - [`enum34`][2]
 - [`lxml`][3]
+
+#### Developer Dependencies
+
+- [`coverage`][5]
 
 ### Python 3
 
@@ -55,3 +60,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [2]: https://pypi.python.org/pypi/enum34
 [3]: https://pypi.python.org/pypi/lxml
 [4]: https://www.wegotpop.com
+[5]: https://coverage.readthedocs.io
