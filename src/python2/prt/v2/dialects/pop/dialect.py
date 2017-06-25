@@ -4,11 +4,14 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-from prt.v2.mark_up import (InvalidTagValue,
-                            InvalidPropertyForTag)
+# Import from PRT modules
+from prt.v2.dialect import PRTDialect
+from prt.v2.markup  import (InvalidIdentifier,
+                            InvalidAttributeToIdentifier)
 
 
-class PRTPOPDialect(object):
+#------------------------------------------------------------------------------#
+class PRTPOPDialect(PRTDialect):
 
     _VALID_IDENTIFIERS         = {0x00: 'a',
                                   0x01: 'b',
@@ -26,24 +29,26 @@ class PRTPOPDialect(object):
                                   0x0D: 'pre',
                                   0x0E: 's',
                                   0x0F: 'u'}
-    _VALID_TAGS                = {v: k for k, v in _VALID_IDENTIFIERS.iteritems()}
+    _VALID_TAGS                = {v: k for k, v in
+                                    _VALID_IDENTIFIERS.iteritems()}
     _VALID_GENERIC_ATTRIBUTES  = {'id', 'class'}
     _VALID_SPECIFIC_ATTRIBUTES = {0x00: {'href'},
                                   0x0B: {'alt', 'src'}}
 
-    name = 'pop'
+    NAME = 'pop'
 
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     @classmethod
     def validate_identifier(cls, identifier):
         try:
             cls._VALID_IDENTIFIERS[identifier]
         except KeyError:
-            raise InvalidTagValue(
-                'Expected one of {!r}, but got {!r} '
-                '({})'.format(tuple(cls._VALID_IDENTIFIERS.iterkeys()),
-                              identifier,
-                              identifier.__class__.__name__))
+            raise InvalidIdentifier(
+                'Expected one of {0!r}, but got: {1!r} (type '
+                '{1.__class__.__name__})'.format(
+                    tuple(cls._VALID_IDENTIFIERS.iterkeys()), identifier))
 
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     @classmethod
     def validate_attribute(cls, identifier, attribute, _):
         try:
@@ -54,22 +59,16 @@ class PRTPOPDialect(object):
         valid_attributes |= cls._VALID_GENERIC_ATTRIBUTES
 
         if attribute not in valid_attributes:
-            raise InvalidPropertyForTag(
-                'Expected to have one of {!r}, '
-                'but got {!r} ({})'.format(valid_attributes, attribute, attribute.__class__.__name__))
+            raise InvalidAttributeToIdentifier(
+                'Expected to have one of {0!r}, but got {1!r} (type '
+                '{1.__class__.__name__})'.format(valid_attributes, attribute))
 
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     @classmethod
     def identifier_to_html(cls, identifier):
         return cls._VALID_IDENTIFIERS[identifier]
 
-    @classmethod
-    def attribute_to_html(cls, identifier, attribute_name, attribute_value):
-        return attribute_name, attribute_value
-
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     @classmethod
     def identifier_from_html(cls, tag):
         return cls._VALID_TAGS[tag]
-
-    @classmethod
-    def attribute_from_html(cls, identifier, attribute_name, attribute_value):
-        return attribute_name, attribute_value
