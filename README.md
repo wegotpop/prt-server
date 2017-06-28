@@ -1,4 +1,5 @@
 # PRT
+![CircleCI](https://circleci.com/gh/wegotpop/prt-server.png?circle-token=:circle-token)
 
 This repository is the reference server-side implemention of [PRT][1], a safe,
 small and strict rich text serialisation protocol.

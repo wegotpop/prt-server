@@ -1,0 +1,9 @@
+machine:
+  python:
+    version: 2.7.13
+dependencies:
+  pre:
+    - pip install lxml enum34 coverage
+test:
+  override:
+    - bash run_tests.sh
