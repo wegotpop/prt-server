@@ -6,7 +6,6 @@ from __future__ import (absolute_import,
                         unicode_literals)
 
 # Import from PRT modules
-from prt.error       import PRTError
 from prt.version     import PRTVersion, InvalidVersion
 from prt.dialects    import get_dialect
 from prt.v2.document import PRTDocument as _PRTDocumentV2
