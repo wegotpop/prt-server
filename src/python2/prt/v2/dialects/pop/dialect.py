@@ -13,27 +13,36 @@ from prt.v2.markup  import (InvalidIdentifier,
 #------------------------------------------------------------------------------#
 class PRTPOPDialect(PRTDialect):
 
-    _VALID_IDENTIFIERS         = {0x00: 'a',
-                                  0x01: 'b',
-                                  0x02: 'code',
-                                  0x03: 'h1',
-                                  0x04: 'h2',
-                                  0x05: 'h3',
-                                  0x06: 'h4',
-                                  0x07: 'h5',
-                                  0x08: 'h6',
-                                  0x09: 'h7',
-                                  0x0A: 'i',
-                                  0x0B: 'img',
-                                  0x0C: 'p',
-                                  0x0D: 'pre',
-                                  0x0E: 's',
-                                  0x0F: 'u'}
+    _VALID_IDENTIFIERS         = {0x00 : 'a',
+                                  0x01 : 'b',
+                                  0x02 : 'blockquote',
+                                  0x03 : 'code',
+                                  0x04 : 'div',
+                                  0x05 : 'h1',
+                                  0x06 : 'h2',
+                                  0x07 : 'h3',
+                                  0x08 : 'h4',
+                                  0x09 : 'h5',
+                                  0x0A : 'h6',
+                                  0x0B : 'h7',
+                                  0x0C : 'i',
+                                  0x0D : 'img',
+                                  0x0E : 'li',
+                                  0x0F : 'ol',
+                                  0x10 : 'p',
+                                  0x11 : 'pre',
+                                  0x12 : 's',
+                                  0x13 : 'span',
+                                  0x14 : 'sub',
+                                  0x15 : 'sup',
+                                  0x16 : 'u',
+                                  0x17 : 'ul'}
+
     _VALID_TAGS                = {v: k for k, v in
                                     _VALID_IDENTIFIERS.iteritems()}
     _VALID_GENERIC_ATTRIBUTES  = {'id', 'class'}
-    _VALID_SPECIFIC_ATTRIBUTES = {0x00: {'href'},
-                                  0x0B: {'alt', 'src'}}
+    _VALID_SPECIFIC_ATTRIBUTES = {0x00: {'href', 'target'},
+                                  0x0B: {'alt', 'src', 'title'}}
 
     NAME = 'pop'
 
