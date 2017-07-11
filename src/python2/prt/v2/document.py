@@ -39,12 +39,24 @@ class PRTDocument(object):
         >>> document = PRTDocument(
         ...     [(0x00, {'href': '#'}, 'click')],
         ...     dialect='pop')
+        >>> document.to_dict()
+        {'type': 'PRTDocument',
+         'version': '2.0',
+         'dialect': 'pop','
+         'elements': [[0, {'href': '#''}, 'click']]}
         >>> document.to_json()
         ('{"type":"PRTDocument","version":"2.0","dialect":"pop",'
          '"elements":[[0,{"href":"#"},"click"]]}')
         >>> document.to_html()
         ('<PRTDocument version="2.0" dialect="pop">'
          '<a href="#">click</a></PRTDocument>')
+
+        # Creat from dict-like object
+        >>> PRTDocument.from_dict({'type': 'PRTDocument',
+        ...                        'version': '2.0',
+        ...                        'dialect': 'pop',
+        ...                        'elements': 'text'}).to_html()
+        '<PRTDocument version="2.0" dialect="pop">text</PRTDocument>'
 
         # Create from HTML string
         >>> PRTDocument.from_html(
@@ -105,6 +117,28 @@ class PRTDocument(object):
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     @classmethod
+    def from_dict(cls, dict_object):
+        if dict_object.get('type', None) != 'PRTDocument':
+            raise InvalidPRTDocument
+        elif dict_object.get('version', None) != cls._VERSION.value:
+            raise IncompatibleVersion
+
+        dialect = get_dialect(dict_object.get('dialect', None), cls._VERSION)
+
+        return PRTDocument(dict_object.get('elements', None), dialect)
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+    @classmethod
+    def from_json(cls, string):
+        try:
+            document = loads(string, object_pairs_hook=OrderedDict)
+        except ValueError:
+            raise InvalidPRTDocument
+
+        return cls.from_dict(document)
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+    @classmethod
     def from_html(cls, string):
         try:
             document = fromstring(string)
@@ -121,36 +155,9 @@ class PRTDocument(object):
         return PRTDocument(cls._from_etree(document, dialect), dialect)
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-    @classmethod
-    def from_json(cls, string):
-        try:
-            document = loads(string, object_pairs_hook=OrderedDict)
-        except ValueError:
-            raise InvalidPRTDocument
-
-        if document.get('type', None) != 'PRTDocument':
-            raise InvalidPRTDocument
-        elif document.get('version', None) != cls._VERSION.value:
-            raise IncompatibleVersion
-
-        dialect = get_dialect(document.get('dialect', None), cls._VERSION)
-
-        return PRTDocument(document.get('elements', None), dialect)
-
-    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-    def to_html(self):
-        self.validate()
-        document = Element('PRTDocument')
-        document.set('version', self._VERSION.value)
-        if self._dialect:
-            document.set('dialect', self._dialect.NAME)
-        self._mark_up.append_to_etree(document)
-        return tostring(document)
-
-    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-    def to_json(self):
+    def to_dict(self):
         """
-        JSON representation of the PRTDocument
+        Python object representation of the PRTDocument
         """
         self.validate()
         document = OrderedDict()
@@ -158,8 +165,28 @@ class PRTDocument(object):
         document['version'] = self._VERSION.value
         if self._dialect:
             document['dialect'] = self._dialect.NAME
-        document['elements'] =self._mark_up.elements()
-        return dumps(document, separators=(',', ':'))
+        document['elements'] = self._mark_up.elements()
+        return document
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+    def to_json(self):
+        """
+        JSON string representation of the PRTDocument
+        """
+        return dumps(self.to_dict(), separators=(',', ':'))
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+    def to_html(self):
+        """
+        HTML string representation of the PRTDocument
+        """
+        self.validate()
+        document = Element('PRTDocument')
+        document.set('version', self._VERSION.value)
+        if self._dialect:
+            document.set('dialect', self._dialect.NAME)
+        self._mark_up.append_to_etree(document)
+        return tostring(document)
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     def validate(self):

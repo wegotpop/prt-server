@@ -6,7 +6,7 @@ setup(name='prt',
                         'text serialisation protocol which can be used for '
                         'example in server - client communications. More info '
                         'on the protocol: https://github.com/wegotpop/prt'),
-      version='1.0.0',
+      version='1.0.1',
       url='https://github.com/wegotpop/prt-server',
       author='We Got POP Ltd.',
       author_email='devops@wegotpop.com',
